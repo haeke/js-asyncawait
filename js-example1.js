@@ -34,6 +34,7 @@ class Api {
 }
 
 //implemantation using nested promise callback functions
+// callbackhell as in deeply nested code block - there's no error checking in the function
 function callbacks() {
   const api = new Api();
   let user, friends;
@@ -47,3 +48,30 @@ function callbacks() {
     });
   });
 };
+
+//Promise chain implementation - promises can be chained together by returning another promise inside each callback. This way we can keep all of the callback function declarations. (Better)
+function promiseChain() {
+  const api = new Api();
+  let user, friends;
+  api.getUser()
+  .then(returnedUser) => {
+    user = returnedUser;
+    return api.getFriends(user.id);
+  })
+  .then(returnedFriends) => {
+    friends = returnedFriends;
+    return api.getPhoto(user.id)
+  })
+  .then((photo) => {
+    console.log('promiseChain', { user, friends, photo });
+  });
+};
+
+//Using Async/Await - calling await in front of promises pauses the flow of the function until the promise has resolved, and assigns the result to the variable to the left of the equal sign. Asynchronous operation flow implemented as though it were a normal synchronous series of commands.
+async function Example() {
+  const api = new Api();
+  const user = await api.getUser();
+  const friends = await api.getFriends(user.id);
+  const photo = await api.getPhoto(user.id);
+  console.log('Aync example - ', {user, friends, photo });
+}
