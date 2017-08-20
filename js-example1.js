@@ -32,3 +32,18 @@ class Api {
     });
   };
 }
+
+//implemantation using nested promise callback functions
+function callbacks() {
+  const api = new Api();
+  let user, friends;
+  api.getUser().then(function (returneduser) {
+    user = returnedUser;
+    api.getFriends(user.id).then(function (returnedFriends) {
+      friends = returnedFriends;
+      apy.getPhoto(user.id).then(function (photo) {
+        console.log('callbackhell', { user, friends, photos });
+      });
+    });
+  });
+};
