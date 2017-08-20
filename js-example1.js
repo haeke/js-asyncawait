@@ -166,3 +166,39 @@ async function asyncTryCatch() {
     console.log(err);
   };
 };
+
+// async example of getUserData - returns the data rather than logging it
+async function getUserInfo() {
+  const api = new Api();
+  const user = await api.getUser();
+  const friends = await api.getFriends(user.id);
+  const photo = await api.getPhoto(user.id);
+  return { user, friends, photo };
+
+}
+
+// use async await in the receiver function
+async function awaitUserInfo() {
+  const { user, friends, photo } = await getUserInfo();
+  console.log('user info: ', { user, friends, photo });
+}
+
+// retrieve data from the first 10 users
+async function getUserData() {
+  const users = [];
+  while (users.length < 10) {
+    users.push(await getUserInfo());
+  };
+  console.log('Users data: ', users);
+};
+
+//get users data in parallel
+async function lotsOfData() {
+  try {
+    const userPromises = Array(10).fill(getUserInfo());
+    const users = await Promise.all(userPromises);
+    console.log('lots of data: ', users);
+  } catch (err) {
+    console.log(err);
+  };
+};
