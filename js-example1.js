@@ -112,3 +112,13 @@ async function Loop() {
     console.log('asyncAwait loops', moreFriends);
   };
 };
+
+//parallel operation with async/await - to run operations in parallel form an array of promises to be fun, and pass it as the parameter to Promise.all(). This returns single promises for us to await, which will resolve once all of the operations have completed.
+async function ParallelLoop() {
+  const api = new Api();
+  const user = await api.getUser();
+  const friends = await api.getFriends(user.id);
+  const friendPromises = friends.map(friend => api.getFriends(friend.id));
+  const moreFriends = await Promise.all(friendPromises);
+  console.log('ParallelLoop ', moreFriends);
+}
