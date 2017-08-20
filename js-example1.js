@@ -148,3 +148,21 @@ function PromiseChainErrorHandling() {
       console.error(err);
     });
 };
+
+// Exmaple of Try/Catch block with Async await - we can throw and catch errors from synchronous and asynchronous code.
+
+async function asyncTryCatch() {
+  try {
+    const api = new Api();
+    const user = await api.getUser();
+    const friends = await api.getFriends(user.id);
+
+    await api.throwError();
+    console.log('Error was not found');
+
+    const photo = await api.getPhoto(user.id);
+    console.log('async/await', { user, friends, photo });
+  } catch (err) {
+    console.log(err);
+  };
+};
