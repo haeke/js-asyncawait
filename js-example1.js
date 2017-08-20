@@ -79,7 +79,7 @@ async function Example() {
 }
 
 // Functions to sequentially retrieve the friends lists for each of the users friends
-// Exmaple with promises - an inner-function that recursively chains promises for fetching friends-of-friends until the list is empty.
+// Example with promises - an inner-function that recursively chains promises for fetching friends-of-friends until the list is empty.
 function promiseLoop() {
   const api = Api();
   api.getUser()
@@ -99,4 +99,16 @@ function promiseLoop() {
       }
       return getFriendsOfFriends(returnedFriends);
     })
+};
+
+// sequentially retrieve the friends lists for each of the users friends using Async/Await
+async function Loop() {
+  const api = new Api();
+  const user = await api.getUser();
+  const friends = await api.getFriends(user.id);
+
+  for ( let friend in friends ) {
+    let moreFriends = await.api.getFriends(friend.id);
+    console.log('asyncAwait loops', moreFriends);
+  };
 };
