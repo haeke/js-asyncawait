@@ -122,3 +122,29 @@ async function ParallelLoop() {
   const moreFriends = await Promise.all(friendPromises);
   console.log('ParallelLoop ', moreFriends);
 }
+
+// Asynchronous error handling
+// A single catch function at the end of a promise chain to provide a single error handler for all opertaions.
+function PromiseChainErrorHandling() {
+  const api = new Api();
+  let user, friends;
+  api.getUser()
+    .then((returnedUser) => {
+      user = returnedUser;
+      return api.getFriends(user.id);
+    })
+    .then((returnedFriends) => {
+      friends = returnedFriends;
+      return api.throwError();
+    })
+    .then(() => {
+      console.log('Error was not thrown')
+      return api.getPhoto(user.id);
+    })
+    .then((photo) => {
+      console.log('PromiseChainErrorHandling', { user, friends, photo });
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+};
