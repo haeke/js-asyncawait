@@ -68,6 +68,8 @@ function promiseChain() {
 };
 
 //Using Async/Await - calling await in front of promises pauses the flow of the function until the promise has resolved, and assigns the result to the variable to the left of the equal sign. Asynchronous operation flow implemented as though it were a normal synchronous series of commands.
+// aync needs to be declared at the beginning of a function, it is required and turns the function into a promise.
+// Promises offer a consistent syntax for chaining and composing asynchronous operations.
 async function Example() {
   const api = new Api();
   const user = await api.getUser();
@@ -75,3 +77,26 @@ async function Example() {
   const photo = await api.getPhoto(user.id);
   console.log('Aync example - ', {user, friends, photo });
 }
+
+// Functions to sequentially retrieve the friends lists for each of the users friends
+// Exmaple with promises - an inner-function that recursively chains promises for fetching friends-of-friends until the list is empty.
+function promiseLoop() {
+  const api = Api();
+  api.getUser()
+    .then((user) => {
+      return api.getFriends(user.id);
+    });
+    .then((returnedFriends) => {
+      const getFriendsOfFriends = (friends) => {
+        if (friends.length > 0) {
+          let friend = friends.pop();
+          return api.getFriends(friend.id)
+            .then((moreFriends) => {
+              console.log('promiseloop', moreFriends);
+              return getFriendsOfFriends(friends);
+            });
+        }
+      }
+      return getFriendsOfFriends(returnedFriends);
+    })
+};
